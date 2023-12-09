@@ -3,6 +3,16 @@ import { z } from "zod";
 
 import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
+import WebSocket from "ws";
+
+const camEmittter = new WebSocket("ws://localhost:8000/cam");
+
+camEmittter.on("error", console.error);
+
+camEmittter.on("open", function open() {
+  console.log("connected");
+});
+
 let post = {
   id: 1,
   name: "Hello World",
@@ -36,9 +46,29 @@ export const postRouter = createTRPCRouter({
       console.log("subscribed");
       const int = setInterval(() => {
         emit.next(Math.random());
-      }, 500);
+      }, 100000);
       return () => {
         clearInterval(int);
+      };
+    });
+  }),
+
+  camData: publicProcedure.subscription(() => {
+    return observable<number[]>((emit) => {
+      // const onUpdate = (data: string) => {
+      //   const vals = data.split(",");
+      //   const pixels = vals.map((val) => Number(val));
+      //   emit.next(pixels);
+      // };
+      camEmittter.on("message", function message(data) {
+        console.log(`data: ${data}`);
+        const msg: any = JSON.parse(data.toString());
+        emit.next(msg.pixels as number[]);
+      });
+
+      return () => {
+        console.log("closing connection to camera");
+        camEmittter.close();
       };
     });
   }),

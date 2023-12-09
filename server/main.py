@@ -1,6 +1,7 @@
 from fastapi import FastAPI, WebSocket
 import asyncio
 import numpy as np
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
@@ -22,8 +23,9 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         try:
             data = load_image_data()
-            await websocket.send_text(f"{data}")
-            await asyncio.sleep(2)
+            msg = {"pixels": data, "temp": 25}
+            await websocket.send_json(msg)
+            await asyncio.sleep(0.5)
         except:
             print("Client disconnected.")
             break

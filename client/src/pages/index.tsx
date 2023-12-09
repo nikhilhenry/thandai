@@ -4,12 +4,12 @@ import { useState } from "react";
 import { api } from "~/utils/api";
 
 export default function Home() {
-  const hello = api.post.hello.useQuery({ text: "from tRPC" });
+  const [pixels, setPixels] = useState<number[]>();
 
-  const [num, setNumber] = useState<number>();
-  api.post.randomNumber.useSubscription(undefined, {
-    onData(n) {
-      setNumber(n);
+  api.post.camData.useSubscription(undefined, {
+    onData(val) {
+      console.log(val);
+      setPixels(val);
     },
   });
 
@@ -25,10 +25,7 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold tracking-tight text-white sm:text-[5rem]">
             Thand<span className="text-[hsl(280,100%,70%)]">ai</span>
           </h1>
-          <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p>
-          <div>{num}</div>
+          <div className="text-white">{pixels}</div>
         </div>
       </main>
     </>
