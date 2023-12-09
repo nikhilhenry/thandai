@@ -5,7 +5,7 @@ import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
 
 import WebSocket from "ws";
 
-const camEmittter = new WebSocket("ws://localhost:8000/cam");
+const camEmittter = new WebSocket("ws://raspberrypi.local:8000/cam");
 
 camEmittter.on("error", console.error);
 
@@ -57,6 +57,7 @@ export const postRouter = createTRPCRouter({
     return observable<number[]>((emit) => {
       camEmittter.on("message", (data) => {
         // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        console.log("received: %s", data.toString());
         const msg = JSON.parse(data.toString()) as CamPayload;
         emit.next(msg.pixels);
       });

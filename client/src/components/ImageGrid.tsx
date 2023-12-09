@@ -2,12 +2,15 @@ const ImageGrid: React.FC<{ pixels: number[] }> = ({ pixels }) => {
   const size = 8;
   const baseClassname = "h-20 w-20";
 
-  const mappedPixels = pixels.map((px) => lerpColor(px / 80));
-
   return (
     <div className="grid grid-cols-8 gap-0">
-      {mappedPixels.map((px) => (
-        <div className={baseClassname} style={{ backgroundColor: px }}></div>
+      {pixels.map((px) => (
+        <div
+          className={baseClassname}
+          style={{ backgroundColor: lerpColor((px * 10) / 500) }}
+        >
+          {px}
+        </div>
       ))}
     </div>
   );
