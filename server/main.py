@@ -16,6 +16,19 @@ def ping():
     return data
 
 
+@app.websocket("/cam")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    while True:
+        try:
+            data = load_image_data()
+            await websocket.send_text(f"{data}")
+            await asyncio.sleep(2)
+        except:
+            print("Client disconnected.")
+            break
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
