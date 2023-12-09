@@ -1,3 +1,5 @@
+import { number } from "zod";
+
 const ImageGrid: React.FC<{ pixels: number[] }> = ({ pixels }) => {
   const size = 8;
   const baseClassname = "h-20 w-20";
@@ -7,9 +9,9 @@ const ImageGrid: React.FC<{ pixels: number[] }> = ({ pixels }) => {
       {pixels.map((px) => (
         <div
           className={baseClassname}
-          style={{ backgroundColor: lerpColor((px * 10) / 500) }}
+          style={{ backgroundColor: lerpColor(px / 100 + 20 / 100) }}
         >
-          {px}
+          <span className="diplay-none">{px}</span>
         </div>
       ))}
     </div>
@@ -24,11 +26,23 @@ type RGBColor = {
 
 const lerpColor = (t: number) => {
   const startRgb = { r: 8, g: 48, b: 107 };
+  const midRgb = { r: 255, g: 255, b: 255 };
   const endRgb = { r: 103, g: 0, b: 13 };
+
+  if (t <= 0.5) {
+    const lerpedRgb = {
+      r: Math.round(startRgb.r + t * (midRgb.r - startRgb.r)),
+      g: Math.round(startRgb.g + t * (midRgb.g - startRgb.g)),
+      b: Math.round(startRgb.b + t * (midRgb.b - startRgb.b)),
+    };
+    const lerpedHex = rgbToHex(lerpedRgb);
+    return lerpedHex;
+  }
+
   const lerpedRgb = {
-    r: Math.round(startRgb.r + t * (endRgb.r - startRgb.r)),
-    g: Math.round(startRgb.g + t * (endRgb.g - startRgb.g)),
-    b: Math.round(startRgb.b + t * (endRgb.b - startRgb.b)),
+    r: Math.round(midRgb.r + t * (endRgb.r - midRgb.r)),
+    g: Math.round(midRgb.g + t * (endRgb.g - midRgb.g)),
+    b: Math.round(midRgb.b + t * (endRgb.b - midRgb.b)),
   };
   const lerpedHex = rgbToHex(lerpedRgb);
   return lerpedHex;
