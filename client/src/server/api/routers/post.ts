@@ -10,7 +10,7 @@ const camEmittter = new WebSocket("ws://localhost:8000/cam");
 camEmittter.on("error", console.error);
 
 camEmittter.on("open", function open() {
-  console.log("connected");
+  console.log("connected to pi camera");
 });
 
 let post = {
@@ -68,7 +68,6 @@ export const postRouter = createTRPCRouter({
 
       return () => {
         console.log("closing connection to camera");
-        camEmittter.close();
       };
     });
   }),
