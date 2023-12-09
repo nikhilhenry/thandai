@@ -55,15 +55,10 @@ export const postRouter = createTRPCRouter({
 
   camData: publicProcedure.subscription(() => {
     return observable<number[]>((emit) => {
-      // const onUpdate = (data: string) => {
-      //   const vals = data.split(",");
-      //   const pixels = vals.map((val) => Number(val));
-      //   emit.next(pixels);
-      // };
-      camEmittter.on("message", function message(data) {
-        console.log(`data: ${data}`);
-        const msg: any = JSON.parse(data.toString());
-        emit.next(msg.pixels as number[]);
+      camEmittter.on("message", (data) => {
+        // eslint-disable-next-line @typescript-eslint/no-base-to-string
+        const msg = JSON.parse(data.toString()) as CamPayload;
+        emit.next(msg.pixels);
       });
 
       return () => {
@@ -72,3 +67,8 @@ export const postRouter = createTRPCRouter({
     });
   }),
 });
+
+type CamPayload = {
+  pixels: number[];
+  temp: number;
+};
