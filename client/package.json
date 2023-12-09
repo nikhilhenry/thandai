@@ -6,6 +6,7 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "dev:ws": "tsx watch src/server/api/wsDevServer.ts --tsconfig tsconfig.server.json",
     "lint": "next lint",
     "start": "next start"
   },
@@ -38,6 +39,7 @@
     "prettier": "^3.1.0",
     "prettier-plugin-tailwindcss": "^0.5.7",
     "tailwindcss": "^3.3.5",
+    "tsx": "^4.6.2",
     "typescript": "^5.1.6"
   },
   "ct3aMetadata": {
