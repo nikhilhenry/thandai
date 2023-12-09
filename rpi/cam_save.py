@@ -35,7 +35,6 @@ status, pixels = sensor.read_temp(pix_to_read)  # read pixels with status
 if status:
     print(f"Failed to capture img:{status}")
 
-T_thermistor = sensor.read_thermistor()  # read thermistor temp
 
 # save pixels to CSV file
-np.savetxt("ir_camera_{0:2.2f}".format(T_thermistor), pixels, delimiter=",")
+np.savetxt("cam_data.csv", pixels, delimiter=",")
